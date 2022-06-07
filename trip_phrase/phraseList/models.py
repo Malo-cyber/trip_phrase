@@ -56,7 +56,7 @@ class Dicty(models.Model):
     title = models.CharField(max_length=50)
     source_language = models.CharField(max_length=5, choices=Language.choices)
     target_language = models.CharField(max_length=5, choices=Language.choices)
-    ## dicty stock les donne sous la forme : {'id_phrase_src' = id_phrase_target, etc}
+    
 
 
     def save_link(self, phrase_src,phrase_target):
@@ -105,9 +105,7 @@ class Dicty(models.Model):
             context = el['context']
 
             phrase_src = self.phrase_create(src_lang, src_phrase, context)
-            phrase_target = self.phrase_create(target_lang,trg_phrase, context)
+            phrase_target = self.phrase_create(target_lang,trg_phrase,context)
             self.save_link(phrase_src,phrase_target)
 
-
-    #def link(src,trg)
         
