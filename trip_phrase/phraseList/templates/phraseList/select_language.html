@@ -1,0 +1,14 @@
+{% extends "phraseList/base.html" %}
+{% block content %}
+
+<h1>Select your language : </h1>
+
+<ul>
+
+{% for langue in languages %}
+ <li>{{ langue }}</li>
+{% endfor %} 
+
+</ul>
+         
+{% endblock %}

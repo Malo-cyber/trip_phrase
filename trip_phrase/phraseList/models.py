@@ -56,11 +56,14 @@ class Dicty(models.Model):
     title = models.CharField(max_length=50)
     source_language = models.CharField(max_length=5, choices=Language.choices)
     target_language = models.CharField(max_length=5, choices=Language.choices)
+    source_phrases = models.ManyToManyField(Phrase)
+    
     
 
 
     def save_link(self, phrase_src,phrase_target):
         phrase_src.traductions.add(phrase_target)
+        self.source_phrases.add(phrase_src)
 
     def phrase_create(self, language, content, context):
         phrase = Phrase.create(language,content,context)
