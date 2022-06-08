@@ -11,5 +11,5 @@ def select_language (request):
 
 def french_home(request): 
 
-    phrases = Phrase.objects.all().filter(language = 'french')
+    phrases = Phrase.objects.all().filter(language = 'FR')
     return render(request, 'phraseList/lang_home.html',{'phrases' : phrases})
