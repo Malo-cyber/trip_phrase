@@ -5,8 +5,8 @@
 
 <ul>
 
-{% for langue in languages %}
- <li>{{ langue }}</li>
+{% for dicty in dictys %}
+ <li><a href="{% url 'dicty-home' dicty.id %}">{{ dicty.title }}</a></li>
 {% endfor %} 
 
 </ul>

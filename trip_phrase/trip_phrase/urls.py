@@ -19,7 +19,7 @@ from phraseList import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.select_language, name='select-lang'),
-    path('french/', views.french_home, name='lang-home')
+    path('home/', views.select_dicty, name='select-dicty'),
+    path('home/<int:id>/', views.dicty_home, name='dicty-home')
     
 ]

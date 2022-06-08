@@ -47,6 +47,7 @@ class Phrase(models.Model):
     @classmethod
     def create(cls, language, content, context):
         phrase = cls(language = language, content = content, context = context)
+        phrase.save()
         return phrase
 
 
@@ -58,16 +59,17 @@ class Dicty(models.Model):
     target_language = models.CharField(max_length=5, choices=Language.choices)
     source_phrases = models.ManyToManyField(Phrase)
     
-    
-
 
     def save_link(self, phrase_src,phrase_target):
+        phrase_src = Phrase.objects.get(id=phrase_src.id)
+        phrase_target = Phrase.objects.get(id=phrase_target.id)
         phrase_src.traductions.add(phrase_target)
+        phrase_src.save()
         self.source_phrases.add(phrase_src)
+        self.save()
 
     def phrase_create(self, language, content, context):
         phrase = Phrase.create(language,content,context)
-        phrase.save()
         return phrase
         
     def read_dicty_directory(self, path):
@@ -94,6 +96,7 @@ class Dicty(models.Model):
         
         return phraseList
 
+   
     def build(self, title, src_lang, target_lang, dicty_rep_path):
 
         self.title = title
@@ -106,9 +109,6 @@ class Dicty(models.Model):
             src_phrase = el['src_phrase']
             trg_phrase = el['trg_phrase']
             context = el['context']
-
             phrase_src = self.phrase_create(src_lang, src_phrase, context)
             phrase_target = self.phrase_create(target_lang,trg_phrase,context)
             self.save_link(phrase_src,phrase_target)
-
-        
