@@ -2,12 +2,15 @@
 
 {% block content %}
 
-<h1>{{dicty.title}}</h1>
-<div>
-    {% for phrase in dicty.source_phrases.all.filter(context = 'Salutation') %}
-        <li> {{ phrase.content }} {% for trad in phrase.traductions.all %} - {{trad.content}} {% endfor %} </li>
-    {% endfor %}
-</div>
+    <h1>{{dicty.title}}</h1>
+
+    <h6>Liste des phrases disponible dans ce dictionnaire : </h6>
+    <div>
+        {% for phrase in dicty.source_phrases.all %}
+        <p><li> {{ phrase.content }} {% for trad in phrase.traductions.all %} - {{trad.content}} - {{trad.context}} {% endfor %} </li></p>
+        {% endfor %}
+    </div>
+
 
 
 {% endblock %}

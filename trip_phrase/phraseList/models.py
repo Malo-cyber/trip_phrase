@@ -7,39 +7,39 @@ from django.db import models
 class Language(models.TextChoices):
         FRENCH = 'FR'
         ENGLISH = 'EN'
-        SLOVENIAN = 'SL'
         CROATIAN = 'CR'
+        SLOVENIAN = 'SL'
+
+class Context(models.TextChoices):
+        TIME = 'time'
+        NUMBRES = 'Numbers'
+        GENERAL = 'GG'
+        DIRECTION = 'Direction'
+        RESTAURANT = 'Restaurant_bar'
+        SALUTATION = 'Salutation'
+        PRESENTATION = 'Presentation'
+        REMERCIEMENT = 'Remerciement'
+
 
 class Phrase(models.Model):
     
     class Diff(models.TextChoices):
         NEW = '1'
-        BEG= '2'
+        BEG = '2'
         MID = '3'
         FLU = '4'
         EXP = '5'
-
-    class Context(models.TextChoices):
-        RESTAURANT = 'Restaurant_bar'
-        PRESENTATION = 'Presentation'
-        SALUTATION = 'Salutation'
-        NUMBRES = 'Numbers'
-        DIRECTION = 'Direction'
-        REMERCIEMENT = 'Remerciement'
-        TIME = 'time'
-        GENERAL = 'GG'
-
-    language = models.CharField(choices=Language.choices, max_length=5)
-
-    content = models.CharField(max_length=150)
-    traductions = models.ManyToManyField("self", blank = True)
+                
     diff = models.CharField(choices=Diff.choices, max_length=5)
+    skill = models.FloatField(blank = True, null = True)
     context = models.CharField(choices=Context.choices, max_length=500, default='GG')
-    #synonym =  models.ManyToManyField(Phrase)
+    content = models.CharField(max_length=150)
+    language = models.CharField(choices=Language.choices, max_length=5)
     to_learn = models.BooleanField(default = False)
     last_learn = models.DateField(blank = True, null = True)
-    skill = models.FloatField(blank = True, null = True)
-
+    traductions = models.ManyToManyField("self", blank = True)
+    #synonym =  models.ManyToManyField(Phrase)
+    
     @classmethod
     def __str__(self):
         return f'{self.id}'
@@ -55,23 +55,28 @@ class Phrase(models.Model):
 class Dicty(models.Model):
 
     title = models.CharField(max_length=50)
+    source_phrases = models.ManyToManyField(Phrase)
     source_language = models.CharField(max_length=5, choices=Language.choices)
     target_language = models.CharField(max_length=5, choices=Language.choices)
-    source_phrases = models.ManyToManyField(Phrase)
     
-
+  
+    @property
     def save_link(self, phrase_src,phrase_target):
+
         phrase_src = Phrase.objects.get(id=phrase_src.id)
         phrase_target = Phrase.objects.get(id=phrase_target.id)
+
         phrase_src.traductions.add(phrase_target)
         phrase_src.save()
+
         self.source_phrases.add(phrase_src)
         self.save()
 
+    @property
     def phrase_create(self, language, content, context):
         phrase = Phrase.create(language,content,context)
         return phrase
-        
+    
     def read_dicty_directory(self, path):
         import os
         FILE_PATH = path
